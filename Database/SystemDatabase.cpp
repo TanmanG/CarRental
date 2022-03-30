@@ -53,7 +53,9 @@ int SystemDatabase::SearchAccountSSN(int social)
 // Search for accounts using first name, returning accountIDs.
 vector<int>* SystemDatabase::SearchAccountFName(string firstName)
 {
-
+    for (auto it = accounts.cbegin(); it != accounts.cend(); it++) {
+        if (*it->second.)
+    }
 } 
 // Search for accounts using last name, returning accountIDs.
 vector<int>* SystemDatabase::SearchAccountLName(string lastName) 

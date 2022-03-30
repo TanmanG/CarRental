@@ -2,7 +2,8 @@
 #include <String>
 
 struct Contact {
-	std::string name;
+	std::string firstName;
+	std::string lastName;
 	std::string email;
 	int phoneNumber;
 };

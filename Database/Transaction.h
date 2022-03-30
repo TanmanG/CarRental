@@ -5,6 +5,7 @@ struct Transaction
 	int carID;
 	int holderAccountID;
 	int filerAccountID;
-	bool status;
+	bool approved;
+	bool archived;
 };
 

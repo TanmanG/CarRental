@@ -8,8 +8,9 @@ using namespace std;
 
 class SystemDatabase {
 private:
-	map<int, Car*> cars;
-	map<int, Account*> accounts;
+	map<int, Car> cars;
+	map<int, Account> accounts;
+	map<int, Transaction> transactions;
 public:
 	SystemDatabase();
 	~SystemDatabase();
@@ -21,7 +22,7 @@ public:
 
 	// Search Functions
 	Account* SearchAccountID(int accountID); // Search for an account given the ID.
-	int SearchAccountSSN(int social); // Search for account using SSN, returning the accountID.
+	int SearchAccountSSN(int social); // Search for account using SSN, returning the accountID, or -1 on a failed search.
 	vector<int>* SearchAccountFName(string firstName); // Search for accounts using first name, returning accountIDs.
 	vector<int>* SearchAccountLName(string lastName); // Search for accounts using last name, returning accountIDs.
 };

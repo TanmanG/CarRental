@@ -2,6 +2,7 @@
 #include <string>
 
 struct CreditCard {
+	int creditCardID;
 	int cardNumber;
 	int securityCode;
 	std::string expiration;
