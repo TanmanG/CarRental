@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <map>
 #include "CreditCard.h"
 
 struct Sensitive {
 	int ssn;
-	std::vector<CreditCard> cards;
+	std::map<int, CreditCard> cards;
 };

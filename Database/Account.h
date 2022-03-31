@@ -26,13 +26,10 @@ public:
 	Account(string username, string password);
 	~Account();
 
-	// Customer Specific Methods
-	//Sensitive sensitiveInfo;
-	//Contact contactInfo;
-	//Address addressInfo;
+	// Customer Methods
 	// Sensitive Specifc Methods
-	vector<CreditCard>* CardsGet(); // Return a pointer to the list of credit cards on the account.
-	CreditCard* CardGet(int creditCardID); // Return a pointer to a credit card given a unique ID.
+	map<int, CreditCard>* CardsGet(); // Return a pointer to the list of credit cards on the account.
+	bool CardGet(CreditCard& returnCard, int creditCardID); // Return a pointer to a credit card given a unique ID.
 	bool CardAdd(CreditCard* newCard); // Create a new card in the account CC list.
 	bool CardRemove(int creditCardID); // Remove the card that holds the given ID.
 	bool SSNCheck(int SSN); // Check if the account has the given SSN.
@@ -43,8 +40,24 @@ public:
 	string FirstNameGet(); // Get the firstname associated with the account.
 	bool LastNameSet(string lastName); // Set the lastname on the account.
 	string LastNameGet(); // Get the lastname associated with the account.
+	bool PhoneNumberSet(int newNumber); // Set the phone number on the account.
+	int PhoneNumberGet(); // Return the number associated with the account.
+	bool EmailSet(string email); // Set the email for the account.
+	string EmailGet(); // Get the email associated with the account.
 
-	// Account Specific Methods
+	// Address Specific Methods
+	bool CitySet(string newCity); // Set a new city on the account.
+	string CityGet(); // Returns the city on the account.
+	bool CountrySet(string newCountry); // Set a new country on the account.
+	string CountryGet(); // Returns the country on the account.
+	bool StateSet(string newState); // Set a new state on the account.
+	string StateGet(); // Returns the state on the account.
+	bool StreetSet(string newStreet); // Set a new street on the account.
+	string StreetGet(); // Returns the street on the account.
+	bool ZipSet(int newZip); // Set a new zip on the account.
+	int ZipGet(); // Returns the zip on the account.
+
+	// Account Methods
 	void UsernameSet(string username); // Set a new username.
 	void PasswordSet(string password); // Set a new password.
 	int LoginAttempt(string username, string password); // Attempt a login on the account, returns -1 on a fail.
