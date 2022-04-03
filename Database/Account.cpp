@@ -28,7 +28,7 @@ Account::~Account()
 // Return a pointer to the list of credit cards on the account.
 map<int, CreditCard*>* Account::CardsGet()
 {
-	return &this->customer.sensitiveInfo.cards;
+	return &customer.sensitiveInfo.cards;
 }
 // Return a bool representing the card's existence, out'ing the card's reference.
 bool Account::CardGet(CreditCard *returnCard, int creditCardID)
@@ -208,6 +208,11 @@ bool Account::UsernameSet(string newUsername)
 	this->username = username;
 	return true;
 }
+// Return the account's username.
+string Account::UsernameGet()
+{
+	return username;
+}
 // Set a new password.
 bool Account::PasswordSet(string newPassword)
 {
@@ -231,6 +236,11 @@ bool Account::PasswordSet(string newPassword)
 		}
 	}
 	return false; // Password requirements not met.
+}
+// Check given password against the account's stored one.
+bool Account::PasswordCheck(string checkPassword)
+{
+	return password == checkPassword;
 }
 // Attempt a login on the account, returns -1 on an unsuccessful attempt.
 int Account::LoginAttempt(string username, string password) 

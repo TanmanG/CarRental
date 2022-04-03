@@ -71,7 +71,9 @@ public:
 
 	// Account Methods
 	bool UsernameSet(string newUsername); // Set a new username.
+	string UsernameGet(); // Return the account's username.
 	bool PasswordSet(string newPassword); // Set a new password.
+	bool PasswordCheck(string checkPassword); // Check given password against the account's stored one.
 	int LoginAttempt(string username, string password); // Attempt a login on the account, returns -1 on a fail.
 	bool CarAdd(int carID); // Track a new car to this account, if so, return true.
 	bool CarGet(int carID); // Check if a car exists, if so, return true.
