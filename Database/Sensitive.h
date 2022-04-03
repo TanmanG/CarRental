@@ -5,5 +5,5 @@
 
 struct Sensitive {
 	int ssn;
-	std::map<int, CreditCard> cards;
+	std::map<int, CreditCard*> cards;
 };

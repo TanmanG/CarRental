@@ -3,7 +3,11 @@
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    cout << "Hello World!\n";
+    Account test;
+    cout << test.EmailSet("tgood2001@hotmail.com");
+    cout << test.EmailGet();
+    //test.CardAdd();
 }
 
 // Default constructor for SystemDatabase.
@@ -18,6 +22,7 @@ SystemDatabase::~SystemDatabase()
     accounts.clear();
 }
 
+/*
 // Store the passed car to the map, returning if the pass was successful (ID not used).
 bool SystemDatabase::AddCar(Car* car) 
 {
@@ -33,14 +38,17 @@ bool SystemDatabase::AddAccount(Account* account)
 {
 
 } 
+
 // Remove the account with the given ID, returning false if the account was not found.
 bool SystemDatabase::RemoveAccount(int accountID)
 {
 
 } 
+*/
 
 // Search Functions
 // Search for an account given the ID.
+/*
 Account* SystemDatabase::SearchAccountID(int accountID)
 {
 
@@ -62,3 +70,4 @@ vector<int>* SystemDatabase::SearchAccountLName(string lastName)
 {
 
 }
+*/

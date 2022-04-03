@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <regex>
 #include "Customer.h"
 #include "Permissions.h"
 #include "Transaction.h"
@@ -11,26 +13,38 @@ class Account
 {
 private:
 	// Start of Variable Declaration
+
+	// Username to the account.
 	string username;
+	// Password to the account.
 	string password;
+	// Struct containing all the personal info on the accountowner.
 	Customer customer;
+
 	// End of Variable Delaration
 public:
 	// Start of Variable Declaration
+
+	// Unique ID associated with the account.
 	int accountID;
+	// Struct containing perimissions of the account.
 	Permissions permissions;
+	// Vector containing a list of the associated transactions.
 	vector<int> transactionIDs;
+	// Vector containing a list of the associated cars.
 	vector<int> carIDs;
+
 	// End of Variable Declaration
 
+	Account();
 	Account(string username, string password);
 	~Account();
 
 	// Customer Methods
 	// Sensitive Specifc Methods
-	map<int, CreditCard>* CardsGet(); // Return a pointer to the list of credit cards on the account.
-	bool CardGet(CreditCard& returnCard, int creditCardID); // Return a pointer to a credit card given a unique ID.
-	bool CardAdd(CreditCard* newCard); // Create a new card in the account CC list.
+	map<int, CreditCard*>* CardsGet(); // Return a pointer to the list of credit cards on the account.
+	bool CardGet(CreditCard* returnCard, int creditCardID); // Return a pointer to a credit card given a unique ID.
+	bool CardAdd(CreditCard& newCard); // Create a new card in the account CC list.
 	bool CardRemove(int creditCardID); // Remove the card that holds the given ID.
 	bool SSNCheck(int SSN); // Check if the account has the given SSN.
 	bool SSNSet(int SSN); // Set the SSN on the given account.
@@ -48,8 +62,6 @@ public:
 	// Address Specific Methods
 	bool CitySet(string newCity); // Set a new city on the account.
 	string CityGet(); // Returns the city on the account.
-	bool CountrySet(string newCountry); // Set a new country on the account.
-	string CountryGet(); // Returns the country on the account.
 	bool StateSet(string newState); // Set a new state on the account.
 	string StateGet(); // Returns the state on the account.
 	bool StreetSet(string newStreet); // Set a new street on the account.
@@ -58,8 +70,8 @@ public:
 	int ZipGet(); // Returns the zip on the account.
 
 	// Account Methods
-	void UsernameSet(string username); // Set a new username.
-	void PasswordSet(string password); // Set a new password.
+	bool UsernameSet(string newUsername); // Set a new username.
+	bool PasswordSet(string newPassword); // Set a new password.
 	int LoginAttempt(string username, string password); // Attempt a login on the account, returns -1 on a fail.
 	bool CarAdd(int carID); // Track a new car to this account, if so, return true.
 	bool CarGet(int carID); // Check if a car exists, if so, return true.
