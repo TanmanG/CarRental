@@ -18,8 +18,12 @@ Account::Account(string username, string password)
 // Default destructor for Account.
 Account::~Account()
 {
-	transactionIDs.clear();
-	carIDs.clear();
+	transactionIDs.clear(); // Clear the list of related transactions.
+	carIDs.clear(); // Clear the list of related carIDs.
+
+	for (const auto& card : customer.sensitiveInfo.cards) { // Iterate through all CreditCards tracked on the account.
+		delete card.second; // Delete the creditcard object found.
+	} customer.sensitiveInfo.cards.clear(); // Clear the cards map of pointers.
 }
 
 // Customer Methods
@@ -89,6 +93,7 @@ bool Account::SSNSet(int SSN)
 		return false;
 	}
 }
+
 // Contact Specific Methods
 
 // Set the firstname on the account.
@@ -202,6 +207,10 @@ int Account::ZipGet()
 	return customer.addressInfo.zip;
 }
 
+
+
+// Account Specific Functions
+
 // Set a new username.
 bool Account::UsernameSet(string newUsername)
 {
@@ -245,18 +254,15 @@ bool Account::PasswordCheck(string checkPassword)
 // Attempt a login on the account, returns -1 on an unsuccessful attempt.
 int Account::LoginAttempt(string username, string password) 
 {
-	// !! Do this
-	if (this->username == username && password == password)
-	{
-		return 1;
-		// Logged in
+	// !! Add hashing and integrate with signin.
+	if (this->username == username && password == password) { // Check if login details are accurate.
+		return accountID; // Return the account the user is now signed into.
 	}
-	else
-	{
-		return -1;
-		// Login failed
+	else {
+		return -1; // Return -1 to signify a failed sign-in.
 	}
 }
+
 // Track a new car to this account, if so, return true.
 bool Account::CarAdd(int carID)
 {
@@ -286,4 +292,20 @@ bool Account::TransactionAdd(int transactionID)
 // Check if a transaction is bound to this account, if so, return true.
 bool Account::TransactionGet(int transactionID) {
 	return find(transactionIDs.begin(), transactionIDs.end(), transactionID) != transactionIDs.end();
+}
+
+// Set new permissions for the account.
+bool Account::PermissionsSet(bool manageAcc, bool manageCar, bool manageTrn)
+{
+	// Set permissions.
+	permissions.manageAccount = manageAcc;
+	permissions.manageCar = manageCar;
+	permissions.manageTransaction = manageTrn;
+	return true;
+}
+// Return the account's permissions.
+Permissions& Account::PermissionsGet()
+{
+	// Return the account's permission object.
+	return permissions;
 }

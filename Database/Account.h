@@ -37,7 +37,6 @@ public:
 	// End of Variable Declaration
 
 	Account();
-	Account(string username, string password);
 	~Account();
 
 	// Customer Methods
@@ -74,9 +73,12 @@ public:
 	string UsernameGet(); // Return the account's username.
 	bool PasswordSet(string newPassword); // Set a new password.
 	bool PasswordCheck(string checkPassword); // Check given password against the account's stored one.
-	int LoginAttempt(string username, string password); // Attempt a login on the account, returns -1 on a fail.
+	int LoginAttempt(string username, string password); // Attempt a login on the account, returns -1 on a fail or accountID on a success.
+
 	bool CarAdd(int carID); // Track a new car to this account, if so, return true.
 	bool CarGet(int carID); // Check if a car exists, if so, return true.
 	bool TransactionAdd(int transactionID); // Track a new transaction to this account, if so, return true.
 	bool TransactionGet(int transactionID); // Check if a transaction exists, if so, return true.
+	bool PermissionsSet(bool manageAcc, bool manageCar, bool manageTrn); // Set new permissions for the account.
+	Permissions& PermissionsGet(); // Return the account's permissions.
 };

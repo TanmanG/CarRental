@@ -4,6 +4,8 @@
 #include "CreditCard.h"
 
 struct Sensitive {
+	// Social Security Number of the accountholder (!! ENCRPYT)
 	int ssn;
+	// Map of the unique ID and pointers to the account's creditcards.
 	std::map<int, CreditCard*> cards;
 };
