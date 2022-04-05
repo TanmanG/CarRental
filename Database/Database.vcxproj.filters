@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Database">
+      <UniqueIdentifier>{857dd663-5aa1-4493-8ec4-dd3073b16c7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Algorithms">
+      <UniqueIdentifier>{0910bfac-076d-4757-a8ec-a92edcc7ee09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Account">
+      <UniqueIdentifier>{4068e733-5181-4fa4-af3f-52446abfe5a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Account\Customer">
+      <UniqueIdentifier>{3d30516d-6c57-44f2-86f2-6d656b5430fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SystemDatabase.cpp">
@@ -21,7 +33,7 @@
     <ClCompile Include="Account.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Levenshtein.cpp">
+    <ClCompile Include="LevenshteinDistance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FastMin.cpp">
@@ -29,41 +41,35 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SystemDatabase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Transaction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Car.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Database</Filter>
     </ClInclude>
     <ClInclude Include="Account.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Database</Filter>
     </ClInclude>
-    <ClInclude Include="Contact.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SystemDatabase.h">
+      <Filter>Header Files\Database</Filter>
     </ClInclude>
-    <ClInclude Include="Address.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Permissions.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Transaction.h">
+      <Filter>Header Files\Database</Filter>
     </ClInclude>
     <ClInclude Include="Customer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Account</Filter>
     </ClInclude>
-    <ClInclude Include="Sensitive.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Permissions.h">
+      <Filter>Header Files\Account</Filter>
+    </ClInclude>
+    <ClInclude Include="Contact.h">
+      <Filter>Header Files\Account\Customer</Filter>
+    </ClInclude>
+    <ClInclude Include="Address.h">
+      <Filter>Header Files\Account\Customer</Filter>
     </ClInclude>
     <ClInclude Include="CreditCard.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Account\Customer</Filter>
     </ClInclude>
-    <ClInclude Include="Levenshtein.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FastMin.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Sensitive.h">
+      <Filter>Header Files\Account\Customer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

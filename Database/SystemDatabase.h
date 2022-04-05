@@ -3,7 +3,7 @@
 #include <map>
 #include "Car.h"
 #include "Account.h"
-#include "Levenshtein.cpp"
+#include "LevenshteinDistance.cpp"
 
 using namespace std;
 
@@ -39,6 +39,6 @@ public:
 
 	int SearchAccount_SSN(int ssn); // Return the account with the given SSN, returning -1 on a fail.
 	int SearchTransaction_CAR(int carID); // Search for a non-archived transaction involving a car with the given ID, returning -1 on a fail.
-	vector<int>* SearchAccount_FNAME(string firstname, float tolerance); // Return a list of accountIDs of all accounts with firstnames within the given percentage difference, returning -1 on a fail.
-	vector<int>* SearchAccount_LNAME(string lastname, float tolerance); // Return a list of accountIDs of all accounts with lastnames within the given percentage difference, returning -1 on a fail.
+	vector<int> SearchAccount_FNAME(string firstname, float tolerance); // Return a list of accountIDs of all accounts with firstnames within the given percentage difference, returning -1 on a fail.
+	vector<int> SearchAccount_LNAME(string lastname, float tolerance); // Return a list of accountIDs of all accounts with lastnames within the given percentage difference, returning -1 on a fail.
 };

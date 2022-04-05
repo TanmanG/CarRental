@@ -3,8 +3,15 @@
 
 int main()
 {
-    cout << LevenshteinDistance("he", "hello");
-    //test.CardAdd();
+    SystemDatabase test;
+    test.AccountAdd(52525);
+    
+    Account* testAcc = new Account;
+    test.AccountGet(testAcc, 52525);
+    testAcc->FirstNameSet("John");
+    testAcc->LastNameSet("Brown");
+    vector<int> newVec = test.SearchAccount_FNAME("John", 50);
+    cout << newVec.size();
 }
 
 // Default constructor for SystemDatabase.
@@ -202,12 +209,30 @@ int SystemDatabase::SearchTransaction_CAR(int carID)
     }
     return -1;
 }
-/*
 // Return a list of accountIDs of all accounts with firstnames within the given percentage difference.
-vector<int>* SearchAccount_FNAME(string firstname, float tolerance)
+// Tolerance is what percentage of the string's name can be different. (e.g. "Steve" with a 50 will be only return names fewer than 2.5 characters off.)
+vector<int> SystemDatabase::SearchAccount_FNAME(string firstname, float tolerance)
 {
-    // IMPLEMENT LEVENSHTEIN
-    
+    vector<int> foundAccounts;
+    for (const auto& account : accounts) { // Iterate through each account.
+        // Check if the levenshtein distance between the account's name and given name is less than the percentage of the name's length given (50
+        cout << account.second->FirstNameGet();
+        if (LevenshteinDistance(account.second->FirstNameGet(), firstname) <= firstname.length() * (tolerance / 100)) {
+            foundAccounts.push_back(account.second->accountID);
+        }
+    }
+    return foundAccounts;
 }
-vector<int>* SearchAccount_LNAME(string lastname, float tolerance); // Return a list of accountIDs of all accounts with lastnames within the given percentage difference.
-*/
+// Return a list of accountIDs of all accounts with firstnames within the given percentage difference.
+// Tolerance is what percentage of the string's name can be different. (e.g. "Brown" with a 50 will be only return names fewer than 2.5 characters off.)
+vector<int> SystemDatabase::SearchAccount_LNAME(string lastname, float tolerance)
+{
+    vector<int> foundAccounts;
+    for (const auto& account : accounts) { // Iterate through each account.
+        // Check if the levenshtein distance between the account's name and given name is less than the percentage of the name's length given (50
+        if (LevenshteinDistance(account.second->LastNameGet(), lastname) <= lastname.length() * (tolerance / 100)) {
+            foundAccounts.push_back(account.second->accountID);
+        }
+    }
+    return foundAccounts;
+}

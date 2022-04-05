@@ -140,15 +140,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
-    <ClCompile Include="Levenshtein.cpp" />
+    <ClCompile Include="LevenshteinDistance.cpp" />
     <ClCompile Include="FastMin.cpp" />
     <ClCompile Include="SystemDatabase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Account.h" />
     <ClInclude Include="Car.h" />
-    <ClInclude Include="FastMin.h" />
-    <ClInclude Include="Levenshtein.h" />
     <ClInclude Include="SystemDatabase.h" />
     <ClInclude Include="Contact.h" />
     <ClInclude Include="Address.h" />
