@@ -3,11 +3,11 @@
 
 struct Address {
 	// Streetname of the customer.
-	std::string street;
+	std::string street = "8653 NW 120th St";
 	// City name of the customer.
-	std::string city;
+	std::string city = "Potwin";
 	// State name of the customer.
-	std::string state;
+	std::string state = "Kansas";
 	// ZIP code of the customer.
-	int zip;
+	int zip = 67123;
 };

@@ -37,6 +37,7 @@ public:
 	// End of Variable Declaration
 
 	Account();
+	Account(int accountID);
 	~Account();
 
 	// Customer Methods

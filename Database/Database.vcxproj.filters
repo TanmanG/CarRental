@@ -16,9 +16,6 @@
     <Filter Include="Header Files\Database">
       <UniqueIdentifier>{857dd663-5aa1-4493-8ec4-dd3073b16c7e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Algorithms">
-      <UniqueIdentifier>{0910bfac-076d-4757-a8ec-a92edcc7ee09}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Account">
       <UniqueIdentifier>{4068e733-5181-4fa4-af3f-52446abfe5a7}</UniqueIdentifier>
     </Filter>

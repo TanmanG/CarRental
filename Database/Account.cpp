@@ -1,20 +1,16 @@
 #include "Account.h"
-
+#include "vld.h"
 
 //Default constructor for Account.
 Account::Account() {
 	accountID = rand();
-	this->SSNSet(0);
 }
-/*
+
 // Login parameterized constructor for Account.
-Account::Account(string username, string password)
+Account::Account(int accountID)
 {
-	accountID = rand();
-	this->UsernameSet(username);
-	this->PasswordSet(password);
+	this->accountID = accountID;
 }
-*/
 // Default destructor for Account.
 Account::~Account()
 {

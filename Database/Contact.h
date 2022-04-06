@@ -3,11 +3,11 @@
 
 struct Contact {
 	// First name of the customer.
-	std::string firstName;
+	std::string firstName = "Bobbi";
 	// Last name of the customer.
-	std::string lastName;
+	std::string lastName = "Boy";
 	// Email of the customer.
-	std::string email;
+	std::string email = "bobbiboy6@yahoo.com";
 	// Phone number of the customer.
-	int phoneNumber;
+	int phoneNumber = 1234567890;
 };

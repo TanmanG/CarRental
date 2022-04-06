@@ -1,22 +1,35 @@
 // Database.cpp : This file contains the 'main' function. Program execution begins and ends there.
 #include "SystemDatabase.h"
+#include "vld.h"
 
 int main()
 {
     SystemDatabase test; 
+
     test.AccountAdd(52525);
+    tuple<bool, Account*> acc1Result = test.AccountGet(52525);
+    if (get<0>(acc1Result)) {
+        get<1>(acc1Result)->FirstNameSet("John");
+        get<1>(acc1Result)->LastNameSet("Steven");
+    }
+    test.AccountAdd(12345);
+    acc1Result = test.AccountGet(12345);
+    if (get<0>(acc1Result)) {
+        get<1>(acc1Result)->FirstNameSet("Jihn");
+        get<1>(acc1Result)->LastNameSet("Stoven");
+    }
+    test.AccountAdd(25252);
+    acc1Result = test.AccountGet(25252);
+    if (get<0>(acc1Result)) {
+        get<1>(acc1Result)->FirstNameSet("Gonn");
+        get<1>(acc1Result)->LastNameSet("Stivin");
+    }
     
-    Account* testAcc = new Account;
-    test.AccountGet(testAcc, 52525);
-    testAcc->FirstNameSet("John");
-    testAcc->LastNameSet("Steven");
-    
-    vector<int> newVec = test.SearchAccount_LNAME("Steve", 0.2);
-
-    Account* checkAcc = new Account;
-    test.AccountGet(checkAcc, newVec.front());
-
-    cout << checkAcc->FirstNameGet();
+    vector<int> newVec = test.SearchAccount_LNAME("Steve", 0.5);
+    for (int i : newVec) {
+        tuple<bool, Account*> results = test.AccountGet(i);
+        cout << get<1>(results)->FirstNameGet() << endl;
+    }
 }
 
 // Default constructor for SystemDatabase.
@@ -47,29 +60,28 @@ map<int, Car*>* SystemDatabase::CarsGet()
     return &cars;
 }
 // Return the car with the given ID.
-bool SystemDatabase::CarGet(Car*& returnCar, int carID)
+tuple<bool, Car*> SystemDatabase::CarGet(int carID)
 {
     auto it = CarsGet()->find(carID); // Search for the card in the cards map.
     if (it != CarsGet()->end()) { // Check if the card is present in the map.
-        *returnCar = *it->second; // Set the return pointer to the found card.
-        return true;
+        return make_tuple(true, it->second);
     }
     else {
-        return false;
+        return make_tuple(false, nullptr);
     }
 }
 // Store the passed car to the map, returning if the pass was successful (ID not used).
 bool SystemDatabase::CarAdd(int carID, string make, string model, float mileage, int year)
 {
-    Car* carRef = new Car(); // Declare the car to be added to the list.
-    if (!CarGet(carRef, carID)) { // Check if a car with the given ID already exists.
-        carRef->carID = carID;
-        carRef->make = make;
-        carRef->mileage = mileage;
-        carRef->model = model;
-        carRef->year = year;
+    tuple<bool, Car*> carResult = CarGet(carID); // Declare the car to be added to the list.
+    if (!get<0>(carResult)) { // Check if a car with the given ID already exists.
+        get<1>(carResult)->carID = carID;
+        get<1>(carResult)->make = make;
+        get<1>(carResult)->mileage = mileage;
+        get<1>(carResult)->model = model;
+        get<1>(carResult)->year = year;
         stateHash += carID; // Increase the stateHash.
-        cars.insert(make_pair(carID, carRef));
+        cars.insert(make_pair(carID, get<1>(carResult)));
         return true;
     }
     else {
@@ -79,10 +91,10 @@ bool SystemDatabase::CarAdd(int carID, string make, string model, float mileage,
 // Delete the car with the given ID, returning false if the given ID did not exist.
 bool SystemDatabase::CarRemove(int carID)
 {
-    Car* carRef = new Car; // Out-ed creditcard pointer.
-    if (CarGet(carRef, carID)) { // Check if the car doesn't exist.
+    tuple<bool, Car*> carResult = CarGet(carID); // Out-ed creditcard pointer.
+    if (get<0>(carResult)) { // Check if the car doesn't exist.
         stateHash -= carID; // Lower the stateHash.
-        delete carRef; // Delete the car struct.
+        delete get<1>(carResult); // Delete the car struct.
         CarsGet()->erase(carID); // Remove the car from the map.
         return true;
     }
@@ -97,25 +109,24 @@ map<int, Account*>* SystemDatabase::AccountsGet()
     return &accounts;
 }
 // Return the account with the given ID.
-bool SystemDatabase::AccountGet(Account*& returnAccount, int accountID)
+tuple<bool, Account*> SystemDatabase::AccountGet(int accountID)
 {
     auto it = AccountsGet()->find(accountID); // Search for the card in the cards map.
     if (it != AccountsGet()->end()) { // Check if the card is present in the map.
-        returnAccount = it->second; // Set the return pointer to the found card.
-        return true;
+        return make_tuple(true, it->second);
     }
     else {
-        return false;
+        return make_tuple(false, nullptr);
     }
 }
 // Store the passed account to the map, returning if the pass was successful (SSN was unused).
 bool SystemDatabase::AccountAdd(int accountID)
 {
-    Account* accountRef = new Account(); // Declare the account to be added to the list.
-    if (!AccountGet(accountRef, accountID)) { // Check if an account with the given ID already exists.
-        accountRef->accountID = accountID; // Set account parameters.
+    tuple<bool, Account*> accountResult = AccountGet(accountID); // Check if an account with the given ID exists.
+    if (!get<0>(accountResult)) { // Check if an account with the given ID already exists.
+        Account* newAccount = new Account(accountID);
         stateHash += accountID; // Increase the stateHash.
-        accounts.insert(make_pair(accountRef->accountID, accountRef)); // Insert the account into the map.
+        accounts.insert(make_pair(accountID, newAccount)); // Insert the account into the map.
         return true;
     }
     else {
@@ -125,15 +136,17 @@ bool SystemDatabase::AccountAdd(int accountID)
 // Remove the account with the given ID, returning false if the account was not found.
 bool SystemDatabase::AccountRemove(int accountID)
 {
-    Account* accountRef = new Account(); // Declare the account to be added to the list.
-    if (AccountGet(accountRef, accountID)) // Check if the object exists within the account list.
+    tuple<bool, Account*> accountRef = AccountGet(accountID); // Declare the account to be added to the list.
+    if (get<0>(accountRef)) // Check if the object exists within the account list.
     {
         stateHash -= accountID; // Lower the stateHash.
-        delete accountRef; // Call the account deconstructor.
+        delete get<1>(accountRef); // Call the account deconstructor.
         AccountsGet()->erase(accountID); // Erase the entry in the list.
         return true;
     }
-    return false;
+    else {
+        return false;
+    }
 }
 
 // Return the map containing the transactions.
@@ -142,28 +155,29 @@ map<int, Transaction*>* SystemDatabase::TransactionsGet()
     return &transactions;
 }
 // Return the transaction with the given ID.
-bool SystemDatabase::TransactionGet(Transaction*& returnTransaction, int transactionID)
+tuple<bool, Transaction*> SystemDatabase::TransactionGet(int transactionID)
 {
     auto it = TransactionsGet()->find(transactionID); // Search for the card in the cards map.
     if (it != TransactionsGet()->end()) { // Check if the card is present in the map.
-        *returnTransaction = *it->second; // Set the return pointer to the found card.
-        return true;
+        return make_tuple(true, it->second);
     }
     else {
-        return false;
+        return make_tuple(false, nullptr);
     }
 }
 // Store the passed transaction.
 bool SystemDatabase::TransactionAdd(bool approved, bool archived, int carID, int filerAccountID, int holderAccountID, int transactionID)
 {
-    Transaction* transactionRef = new Transaction(); // Declare the account to be added to the list.
-    if (!TransactionGet(transactionRef, transactionID)) { // Check if an account with the given ID already exists.
-        transactionRef->transactionID = transactionID; // Set account parameters.
+    tuple<bool, Transaction*> transactionResult = TransactionGet(transactionID); // Declare the account to be added to the list.
+    if (!get<0>(transactionResult)) { // Check if an account with the given ID already exists.
+        get<1>(transactionResult)->transactionID = transactionID; // Set account parameters.
         stateHash += transactionID;
-        transactions.insert(make_pair(transactionID, transactionRef)); // Insert the account into the map.
+        transactions.insert(make_pair(transactionID, get<1>(transactionResult))); // Insert the account into the map.
         return true;
     }
-    return false;
+    else {
+        return false;
+    }
 }
 // Delete the transaction with the given ID. Avoid using this for the sake of recordkeeping.
 bool SystemDatabase::TransactionDelete(int transactionID)
