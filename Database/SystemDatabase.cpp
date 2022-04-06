@@ -3,15 +3,20 @@
 
 int main()
 {
-    SystemDatabase test;
+    SystemDatabase test; 
     test.AccountAdd(52525);
     
     Account* testAcc = new Account;
     test.AccountGet(testAcc, 52525);
     testAcc->FirstNameSet("John");
-    testAcc->LastNameSet("Brown");
-    vector<int> newVec = test.SearchAccount_FNAME("John", 50);
-    cout << newVec.size();
+    testAcc->LastNameSet("Steven");
+    
+    vector<int> newVec = test.SearchAccount_LNAME("Steve", 0.2);
+
+    Account* checkAcc = new Account;
+    test.AccountGet(checkAcc, newVec.front());
+
+    cout << checkAcc->FirstNameGet();
 }
 
 // Default constructor for SystemDatabase.
@@ -42,11 +47,11 @@ map<int, Car*>* SystemDatabase::CarsGet()
     return &cars;
 }
 // Return the car with the given ID.
-bool SystemDatabase::CarGet(Car* returnCar, int carID)
+bool SystemDatabase::CarGet(Car*& returnCar, int carID)
 {
     auto it = CarsGet()->find(carID); // Search for the card in the cards map.
     if (it != CarsGet()->end()) { // Check if the card is present in the map.
-        returnCar = it->second; // Set the return pointer to the found card.
+        *returnCar = *it->second; // Set the return pointer to the found card.
         return true;
     }
     else {
@@ -92,7 +97,7 @@ map<int, Account*>* SystemDatabase::AccountsGet()
     return &accounts;
 }
 // Return the account with the given ID.
-bool SystemDatabase::AccountGet(Account* returnAccount, int accountID)
+bool SystemDatabase::AccountGet(Account*& returnAccount, int accountID)
 {
     auto it = AccountsGet()->find(accountID); // Search for the card in the cards map.
     if (it != AccountsGet()->end()) { // Check if the card is present in the map.
@@ -137,11 +142,11 @@ map<int, Transaction*>* SystemDatabase::TransactionsGet()
     return &transactions;
 }
 // Return the transaction with the given ID.
-bool SystemDatabase::TransactionGet(Transaction* returnTransaction, int transactionID)
+bool SystemDatabase::TransactionGet(Transaction*& returnTransaction, int transactionID)
 {
     auto it = TransactionsGet()->find(transactionID); // Search for the card in the cards map.
     if (it != TransactionsGet()->end()) { // Check if the card is present in the map.
-        returnTransaction = it->second; // Set the return pointer to the found card.
+        *returnTransaction = *it->second; // Set the return pointer to the found card.
         return true;
     }
     else {
@@ -217,7 +222,7 @@ vector<int> SystemDatabase::SearchAccount_FNAME(string firstname, float toleranc
     for (const auto& account : accounts) { // Iterate through each account.
         // Check if the levenshtein distance between the account's name and given name is less than the percentage of the name's length given (50
         cout << account.second->FirstNameGet();
-        if (LevenshteinDistance(account.second->FirstNameGet(), firstname) <= firstname.length() * (tolerance / 100)) {
+        if (LevenshteinDistance(account.second->FirstNameGet(), firstname) <= float(firstname.length()) * tolerance) {
             foundAccounts.push_back(account.second->accountID);
         }
     }
@@ -230,7 +235,7 @@ vector<int> SystemDatabase::SearchAccount_LNAME(string lastname, float tolerance
     vector<int> foundAccounts;
     for (const auto& account : accounts) { // Iterate through each account.
         // Check if the levenshtein distance between the account's name and given name is less than the percentage of the name's length given (50
-        if (LevenshteinDistance(account.second->LastNameGet(), lastname) <= lastname.length() * (tolerance / 100)) {
+        if (LevenshteinDistance(account.second->LastNameGet(), lastname) <= 6 * tolerance) {
             foundAccounts.push_back(account.second->accountID);
         }
     }
