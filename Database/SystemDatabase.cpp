@@ -1,35 +1,26 @@
 // Database.cpp : This file contains the 'main' function. Program execution begins and ends there.
 #include "SystemDatabase.h"
-#include "vld.h"
 
 int main()
 {
-    SystemDatabase test; 
-
+    /* Example Usage.
+    SystemDatabase test;
+    
+    // Account creation.
     test.AccountAdd(52525);
     tuple<bool, Account*> acc1Result = test.AccountGet(52525);
     if (get<0>(acc1Result)) {
         get<1>(acc1Result)->FirstNameSet("John");
         get<1>(acc1Result)->LastNameSet("Steven");
     }
-    test.AccountAdd(12345);
-    acc1Result = test.AccountGet(12345);
-    if (get<0>(acc1Result)) {
-        get<1>(acc1Result)->FirstNameSet("Jihn");
-        get<1>(acc1Result)->LastNameSet("Stoven");
-    }
-    test.AccountAdd(25252);
-    acc1Result = test.AccountGet(25252);
-    if (get<0>(acc1Result)) {
-        get<1>(acc1Result)->FirstNameSet("Gonn");
-        get<1>(acc1Result)->LastNameSet("Stivin");
-    }
-    
+
+    // Fuzzy search.
     vector<int> newVec = test.SearchAccount_LNAME("Steve", 0.5);
     for (int i : newVec) {
         tuple<bool, Account*> results = test.AccountGet(i);
         cout << get<1>(results)->FirstNameGet() << endl;
     }
+    */
 }
 
 // Default constructor for SystemDatabase.
@@ -52,6 +43,12 @@ SystemDatabase::~SystemDatabase()
     for (const auto& transaction : transactions) { // Iterate through each transaction.
         delete transaction.second; // Delete the transaction struct.
     } transactions.clear(); // Clear the transaction map of pointers.
+}
+
+// Return the current hash value of the database.
+int SystemDatabase::GetHash()
+{
+    return stateHash;
 }
 
 // Return the map containing the cars.
@@ -124,7 +121,7 @@ bool SystemDatabase::AccountAdd(int accountID)
 {
     tuple<bool, Account*> accountResult = AccountGet(accountID); // Check if an account with the given ID exists.
     if (!get<0>(accountResult)) { // Check if an account with the given ID already exists.
-        Account* newAccount = new Account(accountID);
+        Account* newAccount = new Account(accountID); // Create a new account with the given ID.
         stateHash += accountID; // Increase the stateHash.
         accounts.insert(make_pair(accountID, newAccount)); // Insert the account into the map.
         return true;
@@ -229,7 +226,7 @@ int SystemDatabase::SearchTransaction_CAR(int carID)
     return -1;
 }
 // Return a list of accountIDs of all accounts with firstnames within the given percentage difference.
-// Tolerance is what percentage of the string's name can be different. (e.g. "Steve" with a 50 will be only return names fewer than 2.5 characters off.)
+// Tolerance is what percentage of the string's name can be different. (e.g. "Steve" with a 0.5 will be only return names fewer than 2.5 characters off.)
 vector<int> SystemDatabase::SearchAccount_FNAME(string firstname, float tolerance)
 {
     vector<int> foundAccounts;
@@ -243,7 +240,7 @@ vector<int> SystemDatabase::SearchAccount_FNAME(string firstname, float toleranc
     return foundAccounts;
 }
 // Return a list of accountIDs of all accounts with firstnames within the given percentage difference.
-// Tolerance is what percentage of the string's name can be different. (e.g. "Brown" with a 50 will be only return names fewer than 2.5 characters off.)
+// Tolerance is what percentage of the string's name can be different. (e.g. "Brown" with a 0.5 will be only return names fewer than 2.5 characters off.)
 vector<int> SystemDatabase::SearchAccount_LNAME(string lastname, float tolerance)
 {
     vector<int> foundAccounts;

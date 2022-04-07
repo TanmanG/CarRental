@@ -4,9 +4,15 @@
 #include "Car.h"
 #include "Account.h"
 #include "LevenshteinDistance.cpp"
-
+#include <boost/serialization/map.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <sstream>
 using namespace std;
 
+// Regular Declarations
+
+// Database class tracking all accounts, transactions, and cars in the system.
 class SystemDatabase {
 private:
 	// Hash representing the current state of the database. Adding an object -> add the ID. Removing an object -> subtract the ID.
@@ -20,6 +26,8 @@ private:
 public:
 	SystemDatabase();
 	~SystemDatabase();
+
+	int GetHash(); // Return the current hash state of the database.
 
 	map<int, Car*>* CarsGet(); // Return the map containing the cars.
 	tuple<bool, Car*> CarGet(int carID); // Return the car with the given ID.
@@ -42,3 +50,16 @@ public:
 	vector<int> SearchAccount_FNAME(string firstname, float tolerance); // Return a list of accountIDs of all accounts with firstnames within the given percentage difference, returning -1 on a fail.
 	vector<int> SearchAccount_LNAME(string lastname, float tolerance); // Return a list of accountIDs of all accounts with lastnames within the given percentage difference, returning -1 on a fail.
 };
+
+// Serialization
+
+/* !! TODO: IMPLEMENT BOOST SERIALIZATION W/ MAPS ETCC
+namespace boost {
+namespace serialization {
+
+	template<class SystemDatabase>
+	void serialize(map<int, Transaction*>& )
+
+}
+}
+*/

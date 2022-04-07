@@ -16,25 +16,31 @@
     <Filter Include="Header Files\Database">
       <UniqueIdentifier>{857dd663-5aa1-4493-8ec4-dd3073b16c7e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Account">
+    <Filter Include="Source Files\Backend">
+      <UniqueIdentifier>{a98a8113-0eca-4e1c-ae56-347e1110171d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Algorithm">
+      <UniqueIdentifier>{fcd2167d-e9a7-43e2-897a-4467fea2da5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Database\Account">
       <UniqueIdentifier>{4068e733-5181-4fa4-af3f-52446abfe5a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Account\Customer">
+    <Filter Include="Header Files\Database\Account\Customer">
       <UniqueIdentifier>{3d30516d-6c57-44f2-86f2-6d656b5430fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SystemDatabase.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Backend</Filter>
     </ClCompile>
     <ClCompile Include="Account.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LevenshteinDistance.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Backend</Filter>
     </ClCompile>
     <ClCompile Include="FastMin.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="LevenshteinDistance.cpp">
+      <Filter>Source Files\Algorithm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -44,29 +50,29 @@
     <ClInclude Include="Account.h">
       <Filter>Header Files\Database</Filter>
     </ClInclude>
-    <ClInclude Include="SystemDatabase.h">
-      <Filter>Header Files\Database</Filter>
-    </ClInclude>
     <ClInclude Include="Transaction.h">
       <Filter>Header Files\Database</Filter>
     </ClInclude>
     <ClInclude Include="Customer.h">
-      <Filter>Header Files\Account</Filter>
+      <Filter>Header Files\Database\Account</Filter>
     </ClInclude>
     <ClInclude Include="Permissions.h">
-      <Filter>Header Files\Account</Filter>
+      <Filter>Header Files\Database\Account</Filter>
     </ClInclude>
     <ClInclude Include="Contact.h">
-      <Filter>Header Files\Account\Customer</Filter>
+      <Filter>Header Files\Database\Account\Customer</Filter>
     </ClInclude>
     <ClInclude Include="Address.h">
-      <Filter>Header Files\Account\Customer</Filter>
+      <Filter>Header Files\Database\Account\Customer</Filter>
     </ClInclude>
     <ClInclude Include="CreditCard.h">
-      <Filter>Header Files\Account\Customer</Filter>
+      <Filter>Header Files\Database\Account\Customer</Filter>
     </ClInclude>
     <ClInclude Include="Sensitive.h">
-      <Filter>Header Files\Account\Customer</Filter>
+      <Filter>Header Files\Database\Account\Customer</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemDatabase.h">
+      <Filter>Header Files\Database</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
