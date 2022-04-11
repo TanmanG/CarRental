@@ -10,4 +10,14 @@ struct Address {
 	std::string state = "Kansas";
 	// ZIP code of the customer.
 	int zip = 67123;
+
+	// Serialization
+	template <typename Archive>
+	void serialize(Archive& ar, const unsigned int version)
+	{
+		ar& street;
+		ar& city;
+		ar& state;
+		ar& zip;
+	}
 };

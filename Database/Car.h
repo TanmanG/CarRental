@@ -15,4 +15,16 @@ struct Car
 	int year;
 	// Mileage of the car.
 	float mileage;
+
+	// Serialization
+	template <typename Archive>
+	void serialize(Archive& ar, const unsigned int version)
+	{
+		ar& carID;
+		ar& transactionID;
+		ar& make;
+		ar& model;
+		ar& year;
+		ar& mileage;
+	}
 };

@@ -10,4 +10,13 @@ struct Customer {
 	Contact contactInfo;
 	// Address information of the customer.
 	Address addressInfo;
+
+	// Serialization
+	template <typename Archive>
+	void serialize(Archive& ar, const unsigned int version)
+	{
+		ar& sensitiveInfo;
+		ar& contactInfo;
+		ar& addressInfo;
+	}
 };

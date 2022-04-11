@@ -7,6 +7,10 @@
 #include "Permissions.h"
 #include "Transaction.h"
 #include "Car.h"
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 using namespace std;
 
 class Account
@@ -20,6 +24,19 @@ private:
 	string password;
 	// Struct containing all the personal info on the accountowner.
 	Customer customer;
+
+	// Serialization
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive& ar, const unsigned int version) {
+		ar& password;
+		ar& username;
+		ar& customer;
+		ar& accountID;
+		ar& permissions;
+		ar& carIDs;
+		ar& transactionIDs;
+	}
 
 	// End of Variable Delaration
 public:

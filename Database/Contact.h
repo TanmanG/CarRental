@@ -10,4 +10,14 @@ struct Contact {
 	std::string email = "bobbiboy6@yahoo.com";
 	// Phone number of the customer.
 	int phoneNumber = 1234567890;
+
+	// Serialization
+	template <typename Archive>
+	void serialize(Archive& ar, const unsigned int version)
+	{
+		ar& firstName;
+		ar& lastName;
+		ar& email;
+		ar& phoneNumber;
+	}
 };

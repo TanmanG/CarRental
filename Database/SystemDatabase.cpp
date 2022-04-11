@@ -3,16 +3,35 @@
 
 int main()
 {
-    /* Example Usage.
     SystemDatabase test;
-    
-    // Account creation.
     test.AccountAdd(52525);
     tuple<bool, Account*> acc1Result = test.AccountGet(52525);
     if (get<0>(acc1Result)) {
         get<1>(acc1Result)->FirstNameSet("John");
         get<1>(acc1Result)->LastNameSet("Steven");
     }
+    cout << get<1>(test.AccountGet(test.SearchAccount_FNAME("John", 1).front()))->LastNameGet();
+
+    {
+        ofstream ots("filename.dat");
+        boost::archive::text_oarchive oa(ots);
+        oa& test;
+    }
+
+    SystemDatabase test_loaded;
+    {
+        ifstream ifs("filename.dat");
+        boost::archive::text_iarchive ia(ifs);
+        ia >> test_loaded;
+    }
+
+    cout << get<1>(test_loaded.AccountGet(test_loaded.SearchAccount_FNAME("John", 1).front()))->LastNameGet();
+
+    /* Example Usage.
+    SystemDatabase test;
+    
+    // Account creation.
+    
 
     // Fuzzy search.
     vector<int> newVec = test.SearchAccount_LNAME("Steve", 0.5);
@@ -22,6 +41,8 @@ int main()
     }
     */
 }
+
+// Class Implementations
 
 // Default constructor for SystemDatabase.
 SystemDatabase::SystemDatabase() 
@@ -232,7 +253,6 @@ vector<int> SystemDatabase::SearchAccount_FNAME(string firstname, float toleranc
     vector<int> foundAccounts;
     for (const auto& account : accounts) { // Iterate through each account.
         // Check if the levenshtein distance between the account's name and given name is less than the percentage of the name's length given (50
-        cout << account.second->FirstNameGet();
         if (LevenshteinDistance(account.second->FirstNameGet(), firstname) <= float(firstname.length()) * tolerance) {
             foundAccounts.push_back(account.second->accountID);
         }

@@ -1,5 +1,4 @@
 #include "Account.h"
-#include "vld.h"
 
 //Default constructor for Account.
 Account::Account() {
@@ -101,7 +100,7 @@ bool Account::FirstNameSet(string firstName)
 // Get the firstname associated with the account.
 string Account::FirstNameGet() 
 {
-	return customer.contactInfo.lastName;
+	return customer.contactInfo.firstName;
 }
 // Set the lastname on the account.
 bool Account::LastNameSet(string lastName)

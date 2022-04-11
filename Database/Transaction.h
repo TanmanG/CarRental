@@ -11,5 +11,16 @@ struct Transaction
 	int filerAccountID;
 	// Boolean tracking whether the transaction is active (i.e. the involved car is currently being rented or not).
 	bool archived;
+
+	// Serialization
+	template <typename Archive>
+	void serialize(Archive& ar, const unsigned int version)
+	{
+		ar& transactionID;
+		ar& carID;
+		ar& holderAccountID;
+		ar& filerAccountID;
+		ar& archived;
+	}
 };
 

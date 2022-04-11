@@ -4,10 +4,12 @@
 #include "Car.h"
 #include "Account.h"
 #include "LevenshteinDistance.cpp"
+#include <sstream>
+#include <fstream>
 #include <boost/serialization/map.hpp>
+#include <boost/serialization/vector.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
-#include <sstream>
 using namespace std;
 
 // Regular Declarations
@@ -23,6 +25,17 @@ private:
 	map<int, Account*> accounts;
 	// Pointer map to all transactions in the system.
 	map<int, Transaction*> transactions;
+
+	// Serialization
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive& ar, const unsigned int version) {
+		ar& accounts;
+		ar& cars;
+		ar& transactions;
+		ar& stateHash;
+	}
+
 public:
 	SystemDatabase();
 	~SystemDatabase();
@@ -49,17 +62,7 @@ public:
 	int SearchTransaction_CAR(int carID); // Search for a non-archived transaction involving a car with the given ID, returning -1 on a fail.
 	vector<int> SearchAccount_FNAME(string firstname, float tolerance); // Return a list of accountIDs of all accounts with firstnames within the given percentage difference, returning -1 on a fail.
 	vector<int> SearchAccount_LNAME(string lastname, float tolerance); // Return a list of accountIDs of all accounts with lastnames within the given percentage difference, returning -1 on a fail.
+
+	
 };
 
-// Serialization
-
-/* !! TODO: IMPLEMENT BOOST SERIALIZATION W/ MAPS ETCC
-namespace boost {
-namespace serialization {
-
-	template<class SystemDatabase>
-	void serialize(map<int, Transaction*>& )
-
-}
-}
-*/
