@@ -10,6 +10,7 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include <boost/filesystem.hpp>
 using namespace std;
 
 // Regular Declarations
@@ -63,6 +64,15 @@ public:
 	vector<int> SearchAccount_FNAME(string firstname, float tolerance); // Return a list of accountIDs of all accounts with firstnames within the given percentage difference, returning -1 on a fail.
 	vector<int> SearchAccount_LNAME(string lastname, float tolerance); // Return a list of accountIDs of all accounts with lastnames within the given percentage difference, returning -1 on a fail.
 
-	
+	// Serialization
+	bool DBUpdate(); // Update the state of the database.
+
+	bool DBWrite(); // Update the database stored on disk (through Boost).
+	bool DBRead(); // Read the current database state (through Boost).
+	bool DBExists(); // Check if a database exists.
+
+	bool StateWrite(); // Update the current stateHash written to drive.
+	bool StateCheck(); // Read the current stateHash written to drive.
+	bool StateExists(); // Check if a stateHash file exists.
 };
 

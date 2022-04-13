@@ -3,6 +3,7 @@
 
 int main()
 {
+    // !! TODO: Fix lastname not getting read in this example???
     SystemDatabase test;
     test.AccountAdd(52525);
     tuple<bool, Account*> acc1Result = test.AccountGet(52525);
@@ -10,29 +11,12 @@ int main()
         get<1>(acc1Result)->FirstNameSet("John");
         get<1>(acc1Result)->LastNameSet("Steven");
     }
-    cout << get<1>(test.AccountGet(test.SearchAccount_FNAME("John", 1).front()))->LastNameGet();
-
-    {
-        ofstream ots("filename.dat");
-        boost::archive::text_oarchive oa(ots);
-        oa& test;
-    }
-
-    SystemDatabase test_loaded;
-    {
-        ifstream ifs("filename.dat");
-        boost::archive::text_iarchive ia(ifs);
-        ia >> test_loaded;
-    }
-
-    cout << get<1>(test_loaded.AccountGet(test_loaded.SearchAccount_FNAME("John", 1).front()))->LastNameGet();
+    test.AccountAdd(52555);
+    cout << get<1>(test.AccountGet(test.SearchAccount_FNAME("John", 1).front()))->accountID;
 
     /* Example Usage.
     SystemDatabase test;
     
-    // Account creation.
-    
-
     // Fuzzy search.
     vector<int> newVec = test.SearchAccount_LNAME("Steve", 0.5);
     for (int i : newVec) {
@@ -43,7 +27,6 @@ int main()
 }
 
 // Class Implementations
-
 // Default constructor for SystemDatabase.
 SystemDatabase::SystemDatabase() 
 {
@@ -66,12 +49,6 @@ SystemDatabase::~SystemDatabase()
     } transactions.clear(); // Clear the transaction map of pointers.
 }
 
-// Return the current hash value of the database.
-int SystemDatabase::GetHash()
-{
-    return stateHash;
-}
-
 // Return the map containing the cars.
 map<int, Car*>* SystemDatabase::CarsGet()
 {
@@ -91,6 +68,8 @@ tuple<bool, Car*> SystemDatabase::CarGet(int carID)
 // Store the passed car to the map, returning if the pass was successful (ID not used).
 bool SystemDatabase::CarAdd(int carID, string make, string model, float mileage, int year)
 {
+    DBRead(); // Update to the latest version of the database.
+
     tuple<bool, Car*> carResult = CarGet(carID); // Declare the car to be added to the list.
     if (!get<0>(carResult)) { // Check if a car with the given ID already exists.
         get<1>(carResult)->carID = carID;
@@ -271,4 +250,80 @@ vector<int> SystemDatabase::SearchAccount_LNAME(string lastname, float tolerance
         }
     }
     return foundAccounts;
+}
+
+// Serialization
+
+// Update the database stored on disk (through Boost).
+bool SystemDatabase::DBWrite()
+{
+    if (!StateCheck()) { // Check if the state is different.
+        ofstream writer("dbCore"); // Create a writer to the database file.
+        boost::archive::text_oarchive ofarchiveEndpoint(writer); // Create an endpoint for the ofarchive writer.
+        ofarchiveEndpoint << this; // Write this DB to the file.
+        StateWrite(); // Update the saved hash state.
+        return true;
+    }
+    else {
+        return false; // There are no changes to make.
+    }
+}
+// Read the current database state (through Boost).
+bool SystemDatabase::DBRead()
+{
+    if (!DBExists()) { // Check if there isn't a database to read, write a new one if so.
+        ofstream writer("dbCore"); // Create a writer to the database file.
+        boost::archive::text_oarchive ofarchiveEndpoint(writer); // Create an endpoint for the ofarchive writer.
+        ofarchiveEndpoint << this; // Write this DB to the file.
+        StateWrite(); // Update the saved hash state.
+        return false; // No new changes were recieved.
+    }
+    else if (!StateCheck()) { // Check if the database state hash has changed.
+        ifstream reader("dbCore"); // Create a reader of the database file.
+        boost::archive::text_iarchive ifarchiveEndpoint(reader); // Create an endpoint for the ifarchive reader.
+        ifarchiveEndpoint >> *this; // Overwrite the current database with the up-to-date one.
+        return true; // Changes were recieved.
+    }
+    else {
+        return false; // There are no changes to recieve.
+    }
+}
+// Check if a database exists yet.
+bool SystemDatabase::DBExists()
+{
+    return boost::filesystem::exists("dbCore");
+}
+
+// Update the current stateHash written to drive.
+bool SystemDatabase::StateWrite()
+{
+    if (!StateCheck()) { // Check if the hash has changed.
+        {
+            ofstream writer; // Create an ofstream.
+            writer.open("dbHash", ios::out | ios::trunc); // Open the hash file.
+            writer << stateHash; // Write the current hash.
+            return true; // Return true- we wrote a new hash.
+        }
+    }
+    else {
+        return false; // Return false- we didn't write a new hash.
+    }
+}
+// Read the current stateHash written to drive.
+bool SystemDatabase::StateCheck()
+{
+    if (!StateExists())
+        return false;
+
+    int checkHash = 0; // Create a variable to hold the hash.
+    {
+        ifstream reader("dbHash"); // Read the state hash file.
+        reader >> checkHash; // Store the data to the int.
+    }
+    return checkHash == stateHash; // Check if the saved hash is the same as the local one.
+}
+// Check if a stateHash file exists.
+bool SystemDatabase::StateExists()
+{
+    return boost::filesystem::exists("dbHash");
 }

@@ -2,15 +2,15 @@
 struct Transaction
 {
 	// Unique ID of the transaction.
-	int transactionID;
+	int transactionID = -1;
 	// Unique ID of the car involved in the transaction.
-	int carID;
+	int carID = -1;
 	// Unique ID of the new holder of the car.
-	int holderAccountID;
+	int holderAccountID = -1;
 	// Unique ID of the creator of the transaction.
-	int filerAccountID;
+	int filerAccountID = -1;
 	// Boolean tracking whether the transaction is active (i.e. the involved car is currently being rented or not).
-	bool archived;
+	bool archived = false;
 
 	// Serialization
 	template <typename Archive>

@@ -3,13 +3,13 @@
 
 struct Contact {
 	// First name of the customer.
-	std::string firstName = "Bobbi";
+	std::string firstName = "None";
 	// Last name of the customer.
-	std::string lastName = "Boy";
+	std::string lastName = "None";
 	// Email of the customer.
-	std::string email = "bobbiboy6@yahoo.com";
+	std::string email = "None";
 	// Phone number of the customer.
-	int phoneNumber = 1234567890;
+	int phoneNumber = -1;
 
 	// Serialization
 	template <typename Archive>

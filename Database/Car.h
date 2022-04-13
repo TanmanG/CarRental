@@ -4,17 +4,17 @@
 struct Car
 {
 	// Unique ID of the car.
-	int carID;
+	int carID = -1;
 	// ID associated with transaction involving the car.
-	int transactionID;
+	int transactionID = -1;
 	// Make of the car (i.e. manufacturer).
-	std::string make;
+	std::string make = "None";
 	// Model of the car.
-	std::string model;
+	std::string model = "None";
 	// Model year of the car.
-	int year;
+	int year = -1;
 	// Mileage of the car.
-	float mileage;
+	float mileage = -1;
 
 	// Serialization
 	template <typename Archive>

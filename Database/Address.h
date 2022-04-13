@@ -3,13 +3,13 @@
 
 struct Address {
 	// Streetname of the customer.
-	std::string street = "8653 NW 120th St";
+	std::string street = "None";
 	// City name of the customer.
-	std::string city = "Potwin";
+	std::string city = "None";
 	// State name of the customer.
-	std::string state = "Kansas";
+	std::string state = "None";
 	// ZIP code of the customer.
-	int zip = 67123;
+	int zip = -1;
 
 	// Serialization
 	template <typename Archive>
