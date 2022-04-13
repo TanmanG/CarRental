@@ -1,5 +1,5 @@
 #pragma once
-#include <String>
+#include <boost/serialization/string.hpp>
 
 struct Contact {
 	// First name of the customer.

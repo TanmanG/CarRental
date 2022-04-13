@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include <boost/serialization/string.hpp>
 
 struct CreditCard {
 	// Unique ID for the card.

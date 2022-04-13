@@ -2,7 +2,7 @@
 
 //Default constructor for Account.
 Account::Account() {
-	accountID = rand();
+	accountID = -1;
 }
 
 // Login parameterized constructor for Account.

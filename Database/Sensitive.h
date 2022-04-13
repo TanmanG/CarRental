@@ -1,7 +1,6 @@
 #pragma once
-#include <string>
-#include <map>
 #include "CreditCard.h"
+#include <boost/serialization/string.hpp>
 #include <boost/serialization/map.hpp>
 
 struct Sensitive {

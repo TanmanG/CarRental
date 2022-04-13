@@ -4,15 +4,36 @@
 int main()
 {
     // !! TODO: Fix lastname not getting read in this example???
-    SystemDatabase test;
-    test.AccountAdd(52525);
-    tuple<bool, Account*> acc1Result = test.AccountGet(52525);
-    if (get<0>(acc1Result)) {
-        get<1>(acc1Result)->FirstNameSet("John");
-        get<1>(acc1Result)->LastNameSet("Steven");
+    // !! For some reason the DBRead() function isn't working. It appears to write fine but I can't find a way to write an object again. Maybe just make a static read thing???
+    SystemDatabase* test = new SystemDatabase();
+    test->AccountAdd(52525);
+    
+    {
+        tuple<bool, Account*> acc1Result = test->AccountGet(52525);
+        if (get<0>(acc1Result)) {
+            get<1>(acc1Result)->FirstNameSet("John");
+            test->StateHashUpdate("John");
+            get<1>(acc1Result)->LastNameSet("Orange");
+            test->StateHashUpdate("Orange");
+        }
+        cout << get<1>(test->AccountGet(test->SearchAccount_FNAME("John", 1).front()))->LastNameGet();
     }
-    test.AccountAdd(52555);
-    cout << get<1>(test.AccountGet(test.SearchAccount_FNAME("John", 1).front()))->accountID;
+
+    test->DBWrite();
+
+    {
+        tuple<bool, Account*> acc1Result = test->AccountGet(52525);
+        if (get<0>(acc1Result)) {
+            get<1>(acc1Result)->FirstNameSet("John");
+            test->StateHashUpdate("John");
+            get<1>(acc1Result)->LastNameSet("Brown");
+            test->StateHashUpdate("Brown");
+        }
+        cout << get<1>(test->AccountGet(test->SearchAccount_FNAME("John", 1).front()))->LastNameGet();
+    }
+
+    test->DBRead(test);
+    cout << get<1>(test->AccountGet(test->SearchAccount_FNAME("John", 1).front()))->LastNameGet();
 
     /* Example Usage.
     SystemDatabase test;
@@ -49,6 +70,12 @@ SystemDatabase::~SystemDatabase()
     } transactions.clear(); // Clear the transaction map of pointers.
 }
 
+// Return the current hash state of the database.
+int SystemDatabase::StateHashGet()
+{
+    return stateHash;
+}
+
 // Return the map containing the cars.
 map<int, Car*>* SystemDatabase::CarsGet()
 {
@@ -68,8 +95,6 @@ tuple<bool, Car*> SystemDatabase::CarGet(int carID)
 // Store the passed car to the map, returning if the pass was successful (ID not used).
 bool SystemDatabase::CarAdd(int carID, string make, string model, float mileage, int year)
 {
-    DBRead(); // Update to the latest version of the database.
-
     tuple<bool, Car*> carResult = CarGet(carID); // Declare the car to be added to the list.
     if (!get<0>(carResult)) { // Check if a car with the given ID already exists.
         get<1>(carResult)->carID = carID;
@@ -77,7 +102,7 @@ bool SystemDatabase::CarAdd(int carID, string make, string model, float mileage,
         get<1>(carResult)->mileage = mileage;
         get<1>(carResult)->model = model;
         get<1>(carResult)->year = year;
-        stateHash += carID; // Increase the stateHash.
+        StateHashUpdate(to_string(carID)); // Increase the stateHash.
         cars.insert(make_pair(carID, get<1>(carResult)));
         return true;
     }
@@ -90,7 +115,7 @@ bool SystemDatabase::CarRemove(int carID)
 {
     tuple<bool, Car*> carResult = CarGet(carID); // Out-ed creditcard pointer.
     if (get<0>(carResult)) { // Check if the car doesn't exist.
-        stateHash -= carID; // Lower the stateHash.
+        StateHashUpdate(to_string(carID));; // Lower the stateHash.
         delete get<1>(carResult); // Delete the car struct.
         CarsGet()->erase(carID); // Remove the car from the map.
         return true;
@@ -122,7 +147,7 @@ bool SystemDatabase::AccountAdd(int accountID)
     tuple<bool, Account*> accountResult = AccountGet(accountID); // Check if an account with the given ID exists.
     if (!get<0>(accountResult)) { // Check if an account with the given ID already exists.
         Account* newAccount = new Account(accountID); // Create a new account with the given ID.
-        stateHash += accountID; // Increase the stateHash.
+        StateHashUpdate(to_string(accountID)); // Increase the stateHash.
         accounts.insert(make_pair(accountID, newAccount)); // Insert the account into the map.
         return true;
     }
@@ -136,7 +161,7 @@ bool SystemDatabase::AccountRemove(int accountID)
     tuple<bool, Account*> accountRef = AccountGet(accountID); // Declare the account to be added to the list.
     if (get<0>(accountRef)) // Check if the object exists within the account list.
     {
-        stateHash -= accountID; // Lower the stateHash.
+        StateHashUpdate(to_string(accountID)); // Lower the stateHash.
         delete get<1>(accountRef); // Call the account deconstructor.
         AccountsGet()->erase(accountID); // Erase the entry in the list.
         return true;
@@ -168,7 +193,7 @@ bool SystemDatabase::TransactionAdd(bool approved, bool archived, int carID, int
     tuple<bool, Transaction*> transactionResult = TransactionGet(transactionID); // Declare the account to be added to the list.
     if (!get<0>(transactionResult)) { // Check if an account with the given ID already exists.
         get<1>(transactionResult)->transactionID = transactionID; // Set account parameters.
-        stateHash += transactionID;
+        StateHashUpdate(to_string(transactionID));
         transactions.insert(make_pair(transactionID, get<1>(transactionResult))); // Insert the account into the map.
         return true;
     }
@@ -181,7 +206,7 @@ bool SystemDatabase::TransactionDelete(int transactionID)
 {
     auto it = TransactionsGet()->find(transactionID); // Get an iterator to the element with the given transactionID.
     if (it != TransactionsGet()->end()) { // Check the iterator to see if the transaction exists.
-        stateHash -= transactionID; // Lower the stateHash.
+        StateHashUpdate(to_string(transactionID)); // Lower the stateHash.
         delete it->second; // Delete the permissions struct.
         TransactionsGet()->erase(transactionID); // Remove the map entry for the transaction.
         return true;
@@ -254,39 +279,30 @@ vector<int> SystemDatabase::SearchAccount_LNAME(string lastname, float tolerance
 
 // Serialization
 
+// Update the hash using the given data.
+void SystemDatabase::StateHashUpdate(string data)
+{
+    for (size_t i = 0; i < data.size(); i++) {
+        stateHash += data[i] * 5641 + 17;
+    }
+}
+
 // Update the database stored on disk (through Boost).
 bool SystemDatabase::DBWrite()
 {
-    if (!StateCheck()) { // Check if the state is different.
-        ofstream writer("dbCore"); // Create a writer to the database file.
-        boost::archive::text_oarchive ofarchiveEndpoint(writer); // Create an endpoint for the ofarchive writer.
-        ofarchiveEndpoint << this; // Write this DB to the file.
-        StateWrite(); // Update the saved hash state.
-        return true;
-    }
-    else {
-        return false; // There are no changes to make.
-    }
+    ofstream writer("dbCore"); // Create a writer to the database file.
+    boost::archive::text_oarchive ofarchiveEndpoint(writer); // Create an endpoint for the ofarchive writer.
+    ofarchiveEndpoint << this; // Write this DB to the file.
+    StateWrite(); // Update the saved hash state.
+    return true;
 }
 // Read the current database state (through Boost).
-bool SystemDatabase::DBRead()
+bool SystemDatabase::DBRead(SystemDatabase* thisptr)
 {
-    if (!DBExists()) { // Check if there isn't a database to read, write a new one if so.
-        ofstream writer("dbCore"); // Create a writer to the database file.
-        boost::archive::text_oarchive ofarchiveEndpoint(writer); // Create an endpoint for the ofarchive writer.
-        ofarchiveEndpoint << this; // Write this DB to the file.
-        StateWrite(); // Update the saved hash state.
-        return false; // No new changes were recieved.
-    }
-    else if (!StateCheck()) { // Check if the database state hash has changed.
-        ifstream reader("dbCore"); // Create a reader of the database file.
-        boost::archive::text_iarchive ifarchiveEndpoint(reader); // Create an endpoint for the ifarchive reader.
-        ifarchiveEndpoint >> *this; // Overwrite the current database with the up-to-date one.
-        return true; // Changes were recieved.
-    }
-    else {
-        return false; // There are no changes to recieve.
-    }
+    ifstream reader("dbCore"); // Create a reader of the database file.
+    boost::archive::text_iarchive ifarchiveEndpoint(reader); // Create an endpoint for the ifarchive reader.
+    ifarchiveEndpoint >> thisptr;
+    return true; // Changes were recieved.
 }
 // Check if a database exists yet.
 bool SystemDatabase::DBExists()

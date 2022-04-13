@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <map>
 #include "Car.h"
 #include "Account.h"
 #include "LevenshteinDistance.cpp"
@@ -41,7 +40,7 @@ public:
 	SystemDatabase();
 	~SystemDatabase();
 
-	int GetHash(); // Return the current hash state of the database.
+	int StateHashGet(); // Return the current hash state of the database.
 
 	map<int, Car*>* CarsGet(); // Return the map containing the cars.
 	tuple<bool, Car*> CarGet(int carID); // Return the car with the given ID.
@@ -65,10 +64,10 @@ public:
 	vector<int> SearchAccount_LNAME(string lastname, float tolerance); // Return a list of accountIDs of all accounts with lastnames within the given percentage difference, returning -1 on a fail.
 
 	// Serialization
-	bool DBUpdate(); // Update the state of the database.
+	void StateHashUpdate(string data); // Update the hash using the given data.
 
 	bool DBWrite(); // Update the database stored on disk (through Boost).
-	bool DBRead(); // Read the current database state (through Boost).
+	bool DBRead(SystemDatabase* thisptr); // Read the current database state (through Boost).
 	bool DBExists(); // Check if a database exists.
 
 	bool StateWrite(); // Update the current stateHash written to drive.
