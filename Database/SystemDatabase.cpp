@@ -299,9 +299,16 @@ bool SystemDatabase::DBWrite()
 // Read the current database state (through Boost).
 bool SystemDatabase::DBRead(SystemDatabase* thisptr)
 {
+    // !! TO-DO: Version checking using statecheck.
+    SystemDatabase newDB; // Create the new instance of SystemDatabase.
     ifstream reader("dbCore"); // Create a reader of the database file.
     boost::archive::text_iarchive ifarchiveEndpoint(reader); // Create an endpoint for the ifarchive reader.
-    ifarchiveEndpoint >> thisptr;
+    ifarchiveEndpoint >> newDB; // Load the stored database to the pointer.
+    
+    SystemDatabase* oldDB = thisptr; // Create a reference to the old database.
+    thisptr = &newDB; // Create a new database.
+    delete oldDB; // Destroy the old database to avoid any memory issues.
+
     return true; // Changes were recieved.
 }
 // Check if a database exists yet.

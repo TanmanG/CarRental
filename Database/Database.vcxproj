@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
+    <ClCompile Include="DBStateManager.cpp" />
     <ClCompile Include="LevenshteinDistance.cpp" />
     <ClCompile Include="FastMin.cpp" />
     <ClCompile Include="SystemDatabase.cpp" />
@@ -155,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="Account.h" />
     <ClInclude Include="Car.h" />
+    <ClInclude Include="DBStateManager.h" />
     <ClInclude Include="SystemDatabase.h" />
     <ClInclude Include="Contact.h" />
     <ClInclude Include="Address.h" />
