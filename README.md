@@ -1,5 +1,5 @@
 # Explaination
-Greetings! You may be wondering what this is- so I'm here to explain!
+Greetings!
 
 This is my on-going implementation of an car rental database system. It includes cars owned by a company, accounts created (in addition to customer information), and transactions which contain unique IDs for each car and account.
 
